@@ -119,7 +119,8 @@ def train(train_loader, model, optimizer, epoch):
 
         image, depth = sample_batched['image'], sample_batched['depth']
 
-        depth = depth.cuda(async=True)
+        # depth = depth.cuda(async=True)
+        depth = depth.cuda(async_=True)
         image = image.cuda()
 
 
