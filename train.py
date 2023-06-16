@@ -28,9 +28,9 @@ parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                     help='weight decay (default: 1e-4)')
 
-parser.add_argument('--data', default='adjust')
+parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
 parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
-parser.add_argument('--model', default='')
+parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
 
 args = parser.parse_args()
 save_model = args.data+'/'+args.data+'_model_'
