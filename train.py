@@ -29,7 +29,7 @@ parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                     help='weight decay (default: 1e-4)')
 
 parser.add_argument('--data', default='adjust')
-parser.add_argument('--csv', default='')
+parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
 parser.add_argument('--model', default='')
 
 args = parser.parse_args()
