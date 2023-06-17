@@ -13,6 +13,7 @@ from models import modules, net, resnet, densenet, senet
 import cv2
 import os
 from tensorboard_logger import configure, log_value
+import tensorboard_logger as tb_logger
 
 
 
@@ -86,8 +87,13 @@ def main():
     if not os.path.exists(logfolder):
        os.makedirs(logfolder)
     configure(logfolder)
- 
 
+    # 检查默认日志记录器是否已经配置
+    if tb_logger._default_logger is not None:
+        tb_logger.logdir = logfolder  # 更新默认日志记录器的日志文件夹路径
+    else:
+        tb_logger.configure(logfolder)
+    # 到这为止
     for epoch in range(args.start_epoch, args.epochs):
 
         adjust_learning_rate(optimizer, epoch)
