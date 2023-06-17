@@ -84,8 +84,8 @@ def main():
 
     logfolder = "runs/"+args.data 
     print(args.data)
-    if not os.path.exists(logfolder):
-       os.makedirs(logfolder)
+    # if not os.path.exists(logfolder):
+    #    os.makedirs(logfolder)
 
     # 检查默认日志记录器是否已经配置
     if tb_logger._default_logger is not None:
