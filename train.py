@@ -83,15 +83,17 @@ def main():
     train_loader = loaddata.getTrainingData(batch_size,args.csv)
 
     logfolder = "runs/"+args.data 
-    print(args.data)
-    # if not os.path.exists(logfolder):
-    #    os.makedirs(logfolder)
+     if not os.path.exists(logfolder):
+        os.makedirs(logfolder)
 
     # 检查默认日志记录器是否已经配置
-    if tb_logger._default_logger is not None:
-        tb_logger.logdir = logfolder  # 更新默认日志记录器的日志文件夹路径
-    else:
+    if tb_logger.logdir is None:
         tb_logger.configure(logfolder)
+    else:
+        tb_logger.logdir = logfolder  # 更新默认日志记录器的日志文件夹路径
+    
+    for epoch in range(args.start_epoch, args.epochs):
+        adjust_learning_rate(optimizer, epoch)
     # 到这为止
     for epoch in range(args.start_epoch, args.epochs):
 
