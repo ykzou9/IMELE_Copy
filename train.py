@@ -87,7 +87,7 @@ def main():
         os.makedirs(logfolder)
 
     # 判断默认日志记录器是否已经配置
-    if not tb_logger.get_logger_dir():
+    if not hasattr(tb_logger, "_default_logger"):
         tb_logger.configure(logfolder)
     
     for epoch in range(args.start_epoch, args.epochs):
