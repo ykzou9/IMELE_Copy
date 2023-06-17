@@ -86,11 +86,9 @@ def main():
     if not os.path.exists(logfolder):
         os.makedirs(logfolder)
 
-    # 检查默认日志记录器是否已经配置
-    if tb_logger.logdir is None:
+    # 判断默认日志记录器是否已经配置
+    if not tb_logger.get_logger_dir():
         tb_logger.configure(logfolder)
-    else:
-        tb_logger.logdir = logfolder  # 更新默认日志记录器的日志文件夹路径
     
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
