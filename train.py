@@ -83,7 +83,7 @@ def main():
     train_loader = loaddata.getTrainingData(batch_size,args.csv)
 
     logfolder = "runs/"+args.data 
-     if not os.path.exists(logfolder):
+    if not os.path.exists(logfolder):
         os.makedirs(logfolder)
 
     # 检查默认日志记录器是否已经配置
