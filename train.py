@@ -121,7 +121,7 @@ def train(train_loader, model, optimizer, epoch):
 
         # depth = depth.cuda(async=True)
         # depth = depth.cuda(async_=True)
-        depth = depth.to(torch.device("cuda", non_blocking=True))
+        depth = depth.cuda(non_blocking=True)
         image = image.cuda()
 
 
