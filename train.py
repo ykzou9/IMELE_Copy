@@ -82,7 +82,7 @@ def main():
 
     train_loader = loaddata.getTrainingData(batch_size,args.csv)
 
-    logfolder = "runs/"+args.data 
+    logfolder = "runs/"
     if not os.path.exists(logfolder):
         os.makedirs(logfolder)
 
