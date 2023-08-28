@@ -22,9 +22,14 @@ def main():
     parser = argparse.ArgumentParser()
    
   
-    parser.add_argument("--model")
-    parser.add_argument("--csv")
-    parser.add_argument("--outfile")
+    # parser.add_argument("--model")
+    # parser.add_argument("--csv")
+    # parser.add_argument("--outfile")
+    parser.add_argument("--model", default="default_model_path")
+    parser.add_argument("--csv", default="default_csv_path")
+    parser.add_argument("--outfile", default="default_output_path")
+
+
     args = parser.parse_args()
 
     md = glob.glob(args.model+'/*.tar')
