@@ -25,10 +25,9 @@ def main():
     # parser.add_argument("--model")
     # parser.add_argument("--csv")
     # parser.add_argument("--outfile")
-    parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
+    parser.add_argument('--outfile', default='/kaggle/output')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
-    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
-
+    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/Block0_skip_model_110.pth.tar')
 
     args = parser.parse_args()
 
