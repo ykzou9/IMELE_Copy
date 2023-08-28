@@ -56,7 +56,7 @@ def test(test_loader, model, args):
     for i, sample_batched in enumerate(test_loader):
         image, depth = sample_batched['image'], sample_batched['depth']
         # depth = depth.cuda(async=True)
-        depth = depth.to(torch.device("cuda", non_blocking=True))；
+        depth = depth.to(torch.device("cuda", non_blocking=True))
 
         image = image.cuda()
         output = model(image)
