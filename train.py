@@ -34,7 +34,9 @@ parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.c
 parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
 
 args = parser.parse_args()
-save_model = args.data+'/'+'_model_'
+# save_model = args.data+'/'+'_model_'
+save_model = '/kaggle/working/IMELE_Copy/outputs'+'/'+'_model_'
+
 if not os.path.exists(args.data):
     os.makedirs(args.data)
 
