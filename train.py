@@ -34,7 +34,7 @@ parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_mo
 
 args = parser.parse_args()
 # save_model = args.data+'/'+'_model_'
-save_model = '/kaggle/working/IMELE_Copy'+'/'+'_model_'
+save_model = '/kaggle/working/IMELE_Copy'+'/'+'model_'
 
 if not os.path.exists(args.data):
     os.makedirs(args.data)
