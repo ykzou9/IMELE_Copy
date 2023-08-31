@@ -18,10 +18,10 @@ import tensorboard_logger as tb_logger
 
 
 parser = argparse.ArgumentParser(description='PyTorch DenseNet Training')
-parser.add_argument('--epochs', default=100
+parser.add_argument('--epochs', default=60
     , type=int,
                     help='number of total epochs to run')
-parser.add_argument('--start_epoch', default=0, type=int,
+parser.add_argument('--start_epoch', default=31, type=int,
                     help='manual epoch number (useful on restarts)')
 parser.add_argument('--lr', '--learning-rate', default=0.0001, type=float,
                     help='initial learning rate')
@@ -73,7 +73,7 @@ def main():
         batch_size = 2
     else:
         model = model.cuda()
-        #model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
+        # model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
         batch_size = 2
 
 
@@ -194,7 +194,7 @@ def train(train_loader, model, optimizer, epoch):
 
  
 
-def adjust_learning_rate(optimizer, epoch):
+def adjust_learning_rate(optimizer, epoch): # 定义学习率
     lr = args.lr * (0.9 ** (epoch // 5))
 
     for param_group in optimizer.param_groups:
