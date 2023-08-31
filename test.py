@@ -26,7 +26,7 @@ def main():
 
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
-    md = glob.glob('/kaggle/input/block0-skip-model-110pthtar/Block0_skip_model_110.pth.tar')
+    md = glob.glob('/kaggle/working/IMELE_Copy/model_4.pth.tar')
     md.sort(key=natural_keys)  
 
     for x in md:
