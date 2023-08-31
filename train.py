@@ -18,8 +18,7 @@ import tensorboard_logger as tb_logger
 
 
 parser = argparse.ArgumentParser(description='PyTorch DenseNet Training')
-parser.add_argument('--epochs', default=60
-    , type=int,
+parser.add_argument('--epochs', default=5, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--start_epoch', default=31, type=int,
                     help='manual epoch number (useful on restarts)')
@@ -33,22 +32,15 @@ parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
 parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
 parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
 # 添加一个间隔保存功能
-parser.add_argument('--save_interval', default=5, type=int,
+parser.add_argument('--save_interval', default=2, type=int,
                     help='interval between saving models')
 
 args = parser.parse_args()
 # save_model = args.data+'/'+'_model_'
 save_model = '/kaggle/working/IMELE_Copy'+'/'+'_model_'
 
-
-
-
-
-
-
 if not os.path.exists(args.data):
     os.makedirs(args.data)
-
 
 def define_model(is_resnet, is_densenet, is_senet):
     if is_resnet:
@@ -63,19 +55,15 @@ def define_model(is_resnet, is_densenet, is_senet):
         original_model = senet.senet154(pretrained='imagenet')
         Encoder = modules.E_senet(original_model)
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
-
     return model
    
-
 def main():
-    
     global args
     args = parser.parse_args()
     model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
- 
-    
+     
     if args.start_epoch != 0:
-        model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
+        model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
         model = model.cuda()
         state_dict = torch.load(args.model)['state_dict']
         model.load_state_dict(state_dict)
@@ -110,10 +98,16 @@ def main():
 
 
     #修改保存间隔
-        if epoch % args.save_interval == 0:  # Check if the current epoch is a multiple of save_interval
-            out_name = save_model + str(epoch) + '.pth.tar'
-            modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
-            print(modelname)
+       if (epoch + 1) % args.save_interval == 0:  # Check if the current epoch is a multiple of save_interval
+           out_name = save_model + str(epoch + 1) + '.pth.tar'
+           modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
+           print(modelname)
+
+# Save the model after all epochs are completed
+out_name_last = save_model + 'final.pth.tar'
+modelname_last = save_checkpoint({'state_dict': model.state_dict()}, out_name_last)
+print(modelname_last)
+
 
         #out_name = save_model+str(epoch)+'.pth.tar'
         ##if epoch > 30:
