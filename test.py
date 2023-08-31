@@ -27,7 +27,7 @@ def main():
     # parser.add_argument("--outfile")
     parser.add_argument('--outfile', default='/kaggle/output')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
-    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/Block0_skip_model_110.pth.tar')
+    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/_model_30.pth.tar')
 
     args = parser.parse_args()
 
