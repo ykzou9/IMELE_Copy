@@ -16,27 +16,18 @@ import pandas as pd
 import os
 import csv
 import re
-def main():
-    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
 
+def main():
+    # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
     parser = argparse.ArgumentParser()
-   
-  
-    # parser.add_argument("--model")
-    # parser.add_argument("--csv")
-    # parser.add_argument("--outfile")
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
     parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
 
     args = parser.parse_args()
-
     # md = glob.glob(args.model+'/*.tar')
     md = glob.glob('/kaggle/input/block0-skip-model-110pthtar/Block0_skip_model_110.pth.tar')
-
-
-    md.sort(key=natural_keys)
-  
+    md.sort(key=natural_keys)  
 
     for x in md:
         x = str(x)
@@ -44,15 +35,13 @@ def main():
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
-        model.load_state_dict(state_dict)
+        # model.load_state_dict(state_dict)
+        model.module.load_state_dict(state_dict)
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
 
-
-
 def test(test_loader, model, args):
-    
     losses = AverageMeter()
     model.eval()
     model.cuda()
@@ -66,30 +55,19 @@ def test(test_loader, model, args):
 
         image = image.cuda()
         output = model(image)
-
         output = torch.nn.functional.interpolate(output,size=(440,440),mode='bilinear')
-
-
-
 
         batchSize = depth.size(0)
         testing_loss(depth,output,losses,batchSize)
 
-
         totalNumber = totalNumber + batchSize
-
        
-
         errors = util.evaluateError(output, depth,i,batchSize)
-
         errorSum = util.addErrors(errorSum, errors, batchSize)
         averageError = util.averageErrors(errorSum, totalNumber)
      
-
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
     loss = float((losses.avg).data.cpu().numpy())
-
-
 
     print('Model Loss {loss:.4f}\t'
         'MSE {mse:.4f}\t'
@@ -98,11 +76,6 @@ def test(test_loader, model, args):
         'SSIM {ssim:.4f}\t'.format(loss=loss,mse=averageError['MSE']\
             ,rmse=averageError['RMSE'],mae=averageError['MAE'],\
             ssim=averageError['SSIM']))
-
-
-
-
-
 
 def testing_loss(depth , output, losses, batchSize):
     
@@ -119,16 +92,11 @@ def testing_loss(depth , output, losses, batchSize):
     output_normal = torch.cat((-output_grad_dx, -output_grad_dy, ones), 1)
 
     loss_depth = torch.log(torch.abs(output - depth) + 0.5).mean()
-
     loss_dx = torch.log(torch.abs(output_grad_dx - depth_grad_dx) + 0.5).mean()
     loss_dy = torch.log(torch.abs(output_grad_dy - depth_grad_dy) + 0.5).mean()
     loss_normal = torch.abs(1 - cos(output_normal, depth_normal)).mean()
     loss = loss_depth + loss_normal + (loss_dx + loss_dy)
     losses.update(loss.data, batchSize)
-
-
-
-
 
 def define_model(is_resnet, is_densenet, is_senet):
     if is_resnet:
@@ -143,7 +111,6 @@ def define_model(is_resnet, is_densenet, is_senet):
         original_model = senet.senet154(pretrained=None)
         Encoder = modules.E_senet(original_model)
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
-
     return model
 
 class AverageMeter(object):
