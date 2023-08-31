@@ -32,10 +32,19 @@ parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
 parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
 parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
 parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
+# 添加一个间隔保存功能
+parser.add_argument('--save_interval', default=5, type=int,
+                    help='interval between saving models')
 
 args = parser.parse_args()
 # save_model = args.data+'/'+'_model_'
 save_model = '/kaggle/working/IMELE_Copy'+'/'+'_model_'
+
+
+
+
+
+
 
 if not os.path.exists(args.data):
     os.makedirs(args.data)
@@ -96,15 +105,20 @@ def main():
         adjust_learning_rate(optimizer, epoch)
     # 到这为止
     for epoch in range(args.start_epoch, args.epochs):
-
         adjust_learning_rate(optimizer, epoch)
-
         train(train_loader, model, optimizer, epoch)
 
-        out_name = save_model+str(epoch)+'.pth.tar'
-        #if epoch > 30:
-        modelname = save_checkpoint({'state_dict': model.state_dict()},out_name)
-        print(modelname)
+
+    #修改保存间隔
+        if epoch % args.save_interval == 0:  # Check if the current epoch is a multiple of save_interval
+            out_name = save_model + str(epoch) + '.pth.tar'
+            modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
+            print(modelname)
+
+        #out_name = save_model+str(epoch)+'.pth.tar'
+        ##if epoch > 30:
+        #modelname = save_checkpoint({'state_dict': model.state_dict()},out_name)
+        #print(modelname)
         
 
 
