@@ -95,13 +95,11 @@ def main():
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
         train(train_loader, model, optimizer, epoch)
-
-
     #修改保存间隔
-       if (epoch + 1) % args.save_interval == 0:  # Check if the current epoch is a multiple of save_interval
-           out_name = save_model + str(epoch + 1) + '.pth.tar'
-           modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
-           print(modelname)
+        if (epoch + 1) % args.save_interval == 0:  # Check if the current epoch is a multiple of save_interval
+            out_name = save_model + str(epoch + 1) + '.pth.tar'
+            modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
+            print(modelname)
 
 # Save the model after all epochs are completed
 out_name_last = save_model + 'final.pth.tar'
