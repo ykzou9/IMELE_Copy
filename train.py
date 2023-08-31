@@ -42,6 +42,10 @@ save_model = '/kaggle/working/IMELE_Copy'+'/'+'_model_'
 if not os.path.exists(args.data):
     os.makedirs(args.data)
 
+def save_checkpoint(state, filename='test.pth.tar'):
+    torch.save(state, filename)
+    return filename
+
 def define_model(is_resnet, is_densenet, is_senet):
     if is_resnet:
         original_model = resnet.resnet50(pretrained = True)
@@ -223,9 +227,9 @@ class AverageMeter(object):
 
 
 
-def save_checkpoint(state, filename='test.pth.tar'):
-    torch.save(state, filename)
-    return filename
+#def save_checkpoint(state, filename='test.pth.tar'):
+#    torch.save(state, filename)
+#    return filename
 
 
 
