@@ -40,7 +40,7 @@ def main():
         x = str(x)
 
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-        model = torch.nn.DataParallel(model,device_ids=[0,1]).cuda()
+        model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
         model.load_state_dict(state_dict)
 
