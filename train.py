@@ -28,7 +28,6 @@ parser.add_argument('--lr', '--learning-rate', default=0.0001, type=float,
 parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                     help='weight decay (default: 1e-4)')
-
 parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
 parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
 parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
@@ -40,33 +39,31 @@ save_model = '/kaggle/working/IMELE_Copy'+'/'+'_model_'
 if not os.path.exists(args.data):
     os.makedirs(args.data)
 
-
 def define_model(is_resnet, is_densenet, is_senet):
     if is_resnet:
         original_model = resnet.resnet50(pretrained = True)
         Encoder = modules.E_resnet(original_model) 
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
+
     if is_densenet:
         original_model = densenet.densenet161(pretrained=True)
         Encoder = modules.E_densenet(original_model)
         model = net.model(Encoder, num_features=2208, block_channel = [192, 384, 1056, 2208])
+
     if is_senet:
         original_model = senet.senet154(pretrained='imagenet')
         Encoder = modules.E_senet(original_model)
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
 
     return model
-   
 
 def main():
-    
     global args
     args = parser.parse_args()
     model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
- 
-    
+
     if args.start_epoch != 0:
-        model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
+        model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
         model = model.cuda()
         state_dict = torch.load(args.model)['state_dict']
         model.load_state_dict(state_dict)
@@ -96,17 +93,13 @@ def main():
         adjust_learning_rate(optimizer, epoch)
     # 到这为止
     for epoch in range(args.start_epoch, args.epochs):
-
         adjust_learning_rate(optimizer, epoch)
-
         train(train_loader, model, optimizer, epoch)
-
         out_name = save_model+str(epoch)+'.pth.tar'
-        #if epoch > 30:
+        # if epoch > 30:
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!保留Checkpoint的设置
         modelname = save_checkpoint({'state_dict': model.state_dict()},out_name)
         print(modelname)
-        
-
 
 def train(train_loader, model, optimizer, epoch):
     criterion = nn.L1Loss()
@@ -131,7 +124,6 @@ def train(train_loader, model, optimizer, epoch):
         depth = depth.cuda(non_blocking=True)
         image = image.cuda()
 
-
         image = torch.autograd.Variable(image)
         depth = torch.autograd.Variable(depth)
 
@@ -141,7 +133,6 @@ def train(train_loader, model, optimizer, epoch):
 
         output = model(image)
         
-
         if i%200 == 0:
             x = output[0]
             x = x.view([220,220])
