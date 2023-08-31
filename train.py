@@ -20,7 +20,7 @@ import tensorboard_logger as tb_logger
 parser = argparse.ArgumentParser(description='PyTorch DenseNet Training')
 parser.add_argument('--epochs', default=5, type=int,
                     help='number of total epochs to run')
-parser.add_argument('--start_epoch', default=31, type=int,
+parser.add_argument('--start_epoch', default=0, type=int,
                     help='manual epoch number (useful on restarts)')
 parser.add_argument('--lr', '--learning-rate', default=0.0001, type=float,
                     help='initial learning rate')
