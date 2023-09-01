@@ -82,7 +82,8 @@ def test(test_loader, model, args):
 def testing_loss(depth , output, losses, batchSize):
 
     #新加一行
-    ssim_loss = SSIM(window_size=15)
+    # ssim_loss = SSIM(window_size=15)
+    ssim_loss = SSIM(img1=output, img2=depth, window_size=15)
 
     ones = torch.ones(depth.size(0), 1, depth.size(2),depth.size(3)).float().cuda()
     get_gradient = sobel.Sobel().cuda()
