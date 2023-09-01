@@ -1,4 +1,4 @@
-import pytorch_ssim
+#1 import pytorch_ssim
 import argparse
 import torch
 import torch.nn as nn
@@ -47,8 +47,8 @@ def test(test_loader, model, args):
     model.eval()
     model.cuda()
     totalNumber = 0
-    errorSum = {'MSE': 0, 'RMSE': 0, 'MAE': 0,'SSIM':0}
-
+    #2 errorSum = {'MSE': 0, 'RMSE': 0, 'MAE': 0,'SSIM':0}
+    errorSum = {'MSE': 0, 'RMSE': 0, 'MAE': 0}
     for i, sample_batched in enumerate(test_loader):
         image, depth = sample_batched['image'], sample_batched['depth']
         # depth = depth.cuda(async=True)
@@ -74,7 +74,7 @@ def test(test_loader, model, args):
         'MSE {mse:.4f}\t'
         'RMSE {rmse:.4f}\t'
         'MAE {mae:.4f}\t'
-        'SSIM {ssim:.4f}\t'.format(loss=loss,mse=averageError['MSE']\
+        #3 'SSIM {ssim:.4f}\t'.format(loss=loss,mse=averageError['MSE']\
             ,rmse=averageError['RMSE'],mae=averageError['MAE'],\
             ssim=averageError['SSIM']))
 
