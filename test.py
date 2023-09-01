@@ -1,5 +1,3 @@
-# from pytorch_ssim import SSIM
-from pytorch_ssim import ssim as SSIM
 import argparse
 import torch
 import torch.nn as nn
@@ -7,7 +5,7 @@ import torch.nn.parallel
 import glob 
 from models import modules, net, resnet, densenet, senet
 import loaddata
-import util as util2
+import util
 import numpy as np
 import sobel
 import argparse
@@ -64,9 +62,9 @@ def test(test_loader, model, args):
 
         totalNumber = totalNumber + batchSize
        
-        errors = util2.evaluateError(output, depth,i,batchSize)
-        errorSum = util2.addErrors(errorSum, errors, batchSize)
-        averageError = util2.averageErrors(errorSum, totalNumber)
+        errors = util.evaluateError(output, depth,i,batchSize)
+        errorSum = util.addErrors(errorSum, errors, batchSize)
+        averageError = util.averageErrors(errorSum, totalNumber)
      
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
     loss = float((losses.avg).data.cpu().numpy())
@@ -80,12 +78,7 @@ def test(test_loader, model, args):
             ssim=averageError['SSIM']))
 
 def testing_loss(depth , output, losses, batchSize):
-
-    #新加一行
-    # ssim_loss = SSIM(window_size=15)
-    # ssim_loss = SSIM(img1=output, img2=depth, window_size=15)
-    ssim_loss = SSIM(img1=output, img2=depth, window_size=15, size_average=True)
-
+    
     ones = torch.ones(depth.size(0), 1, depth.size(2),depth.size(3)).float().cuda()
     get_gradient = sobel.Sobel().cuda()
     cos = nn.CosineSimilarity(dim=1, eps=0)
