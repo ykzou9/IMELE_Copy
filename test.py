@@ -1,5 +1,5 @@
 # from pytorch_ssim import SSIM
-from pytorch_ssim import ssim as pytorch_ssim
+from pytorch_ssim import ssim as SSIM
 import argparse
 import torch
 import torch.nn as nn
