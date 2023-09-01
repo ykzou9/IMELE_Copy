@@ -5,7 +5,7 @@ import torch.nn.parallel
 import glob 
 from models import modules, net, resnet, densenet, senet
 import loaddata
-import util
+import util as util2
 import numpy as np
 import sobel
 import argparse
@@ -62,9 +62,9 @@ def test(test_loader, model, args):
 
         totalNumber = totalNumber + batchSize
        
-        errors = util.evaluateError(output, depth,i,batchSize)
-        errorSum = util.addErrors(errorSum, errors, batchSize)
-        averageError = util.averageErrors(errorSum, totalNumber)
+        errors = util2.evaluateError(output, depth,i,batchSize)
+        errorSum = util2.addErrors(errorSum, errors, batchSize)
+        averageError = util2.averageErrors(errorSum, totalNumber)
      
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
     loss = float((losses.avg).data.cpu().numpy())
