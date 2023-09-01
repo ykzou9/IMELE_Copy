@@ -1,3 +1,5 @@
+from pytorch_ssim import SSIM
+
 import argparse
 import torch
 import torch.nn as nn
@@ -78,7 +80,10 @@ def test(test_loader, model, args):
             ssim=averageError['SSIM']))
 
 def testing_loss(depth , output, losses, batchSize):
-    
+
+    #新加一行
+    ssim_loss = SSIM(window_size=15)
+
     ones = torch.ones(depth.size(0), 1, depth.size(2),depth.size(3)).float().cuda()
     get_gradient = sobel.Sobel().cuda()
     cos = nn.CosineSimilarity(dim=1, eps=0)
