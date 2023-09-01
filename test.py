@@ -73,10 +73,8 @@ def test(test_loader, model, args):
     print('Model Loss {loss:.4f}\t'
         'MSE {mse:.4f}\t'
         'RMSE {rmse:.4f}\t'
-        'MAE {mae:.4f}\t'
-        #3 'SSIM {ssim:.4f}\t'.format(loss=loss,mse=averageError['MSE']\
-            ,rmse=averageError['RMSE'],mae=averageError['MAE'],\
-            ssim=averageError['SSIM']))
+        'MAE {mae:.4f}\t'.format(loss=loss,mse=averageError['MSE'],rmse=averageError['RMSE'],mae=averageError['MAE'],))
+        #4 删掉SSIM部分
 
 def testing_loss(depth , output, losses, batchSize):
     
