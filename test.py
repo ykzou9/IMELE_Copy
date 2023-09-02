@@ -25,8 +25,8 @@ def main():
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
     parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
     args = parser.parse_args()
-    md = glob.glob(args.model+'/*.tar')
-    # md = glob.glob('/kaggle/input/block0-skip-model-110pthtar/Block0_skip_model_110.pth.tar')
+    # md = glob.glob(args.model+'/*.tar')
+    md = glob.glob('/kaggle/working/IMELE_Copy/model_2.pth.tar')
     md.sort(key=natural_keys)  
 
     for x in md:
@@ -48,14 +48,6 @@ def main():
         ## model.module.load_state_dict(torch.load(x)['state_dict'], strict=False)        
         ## GitHub参考
         ##model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
-
-
-
-
-
-
-
-
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
