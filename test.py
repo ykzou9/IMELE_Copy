@@ -31,14 +31,14 @@ def main():
 
     for x in md:
         x = str(x)
-        model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-        model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        state_dict = torch.load(x)['state_dict']
-        # model.load_state_dict(state_dict)
-        model.module.load_state_dict(state_dict)
+    #    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+     #   model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
+     #   state_dict = torch.load(x)['state_dict']
+     #   # model.load_state_dict(state_dict)
+    #    model.module.load_state_dict(state_dict)
 
-        test_loader = loaddata.getTestingData(2,args.csv)
-        test(test_loader, model, args)
+    #    test_loader = loaddata.getTestingData(2,args.csv)
+    #    test(test_loader, model, args)
 
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
