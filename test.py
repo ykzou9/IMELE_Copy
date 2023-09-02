@@ -19,7 +19,7 @@ import csv
 import re
 
 def main():
-    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+    # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
     parser = argparse.ArgumentParser()
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
@@ -31,16 +31,16 @@ def main():
 
     for x in md:
         x = str(x)
-        # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+        model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        #1 state_dict = torch.load(x)['state_dict']
-        # model.load_state_dict(state_dict)
-        #2 model.module.load_state_dict(state_dict)  
+        # state_dict = torch.load(x)['state_dict']
+        state_dict = torch.load(x, map_location=torch.device("cuda"))['state_dict']
+        model.load_state_dict(state_dict, strict=False)
+        # model.module.load_state_dict(state_dict)  
         
-
-        model.module.load_state_dict(torch.load(x)['state_dict'], strict=False)        
+        # model.module.load_state_dict(torch.load(x)['state_dict'], strict=False)        
         # GitHub参考
-        model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
+        #model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
