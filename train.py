@@ -6,7 +6,6 @@ import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim
 import loaddata
-
 import numpy as np
 import sobel
 from models import modules, net, resnet, densenet, senet
@@ -15,11 +14,8 @@ import os
 from tensorboard_logger import configure, log_value
 import tensorboard_logger as tb_logger
 
-
-
 parser = argparse.ArgumentParser(description='PyTorch DenseNet Training')
-parser.add_argument('--epochs', default=5
-    , type=int,
+parser.add_argument('--epochs', default=5, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--start_epoch', default=0, type=int,
                     help='manual epoch number (useful on restarts)')
@@ -44,24 +40,20 @@ def define_model(is_resnet, is_densenet, is_senet):
         original_model = resnet.resnet50(pretrained = True)
         Encoder = modules.E_resnet(original_model) 
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
-
     if is_densenet:
         original_model = densenet.densenet161(pretrained=True)
         Encoder = modules.E_densenet(original_model)
         model = net.model(Encoder, num_features=2208, block_channel = [192, 384, 1056, 2208])
-
     if is_senet:
         original_model = senet.senet154(pretrained='imagenet')
         Encoder = modules.E_senet(original_model)
         model = net.model(Encoder, num_features=2048, block_channel = [256, 512, 1024, 2048])
-
     return model
 
 def main():
     global args
     args = parser.parse_args()
     model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-
     if args.start_epoch != 0:
         model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
         model = model.cuda()
@@ -73,22 +65,16 @@ def main():
         # model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
         batch_size = 2
 
-
-
     cudnn.benchmark = True
     #optimizer = torch.optim.SGD(model.parameters(), args.lr, weight_decay=args.weight_decay)
     optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weight_decay)
-
     train_loader = loaddata.getTrainingData(batch_size,args.csv)
-
     logfolder = "runs/"
     if not os.path.exists(logfolder):
         os.makedirs(logfolder)
-
     # 判断默认日志记录器是否已经配置
     if not hasattr(tb_logger, "_default_logger"):
         tb_logger.configure(logfolder)
-    
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
     # 到这为止
@@ -105,34 +91,24 @@ def train(train_loader, model, optimizer, epoch):
     criterion = nn.L1Loss()
     batch_time = AverageMeter()
     losses = AverageMeter()
-
     model.train()
-
     cos = nn.CosineSimilarity(dim=1, eps=0)
     get_gradient = sobel.Sobel().cuda()
     global args
     args = parser.parse_args()
-
     end = time.time()
-    for i, sample_batched in enumerate(train_loader):
-       
-
+    for i, sample_batched in enumerate(train_loader):     
         image, depth = sample_batched['image'], sample_batched['depth']
-
         # depth = depth.cuda(async=True)
         # depth = depth.cuda(async_=True)
         depth = depth.cuda(non_blocking=True)
         image = image.cuda()
-
         image = torch.autograd.Variable(image)
         depth = torch.autograd.Variable(depth)
-
         ones = torch.ones(depth.size(0), 1, depth.size(2),depth.size(3)).float().cuda()
         ones = torch.autograd.Variable(ones)
         optimizer.zero_grad()
-
         output = model(image)
-        
         if i%200 == 0:
             x = output[0]
             x = x.view([220,220])
@@ -144,13 +120,11 @@ def train(train_loader, model, optimizer, epoch):
             x2 = x2.cpu().detach().numpy()
             x2 = x2  *100000
             print(x2)
-
             x = x.astype('uint16')
             cv2.imwrite(args.data+str(i)+'_out.png',x)
             x2 = x2.astype('uint16')
             cv2.imwrite(args.data+str(i)+'_out2.png',x2)
         
-
         depth_grad = get_gradient(depth)
         output_grad = get_gradient(output)
         depth_grad_dx = depth_grad[:, 0, :, :].contiguous().view_as(depth)
@@ -167,12 +141,9 @@ def train(train_loader, model, optimizer, epoch):
         losses.update(loss.data, image.size(0))
         loss.backward()
         optimizer.step()
-
         batch_time.update(time.time() - end)
         end = time.time()
-   
         batchSize = depth.size(0)
-
 
         print('Epoch: [{0}][{1}/{2}]\t'
           'Time {batch_time.val:.3f} ({batch_time.sum:.3f})\t'
@@ -180,42 +151,28 @@ def train(train_loader, model, optimizer, epoch):
           .format(epoch, i, len(train_loader), batch_time=batch_time, loss=losses))
     log_value('training loss',losses.avg,epoch)
 
-
-  
-
- 
-
 def adjust_learning_rate(optimizer, epoch): # 定义学习率
     lr = args.lr * (0.9 ** (epoch // 5))
-
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
-
 
 class AverageMeter(object):
     def __init__(self):
         self.reset()
-
     def reset(self):
         self.val = 0
         self.avg = 0
         self.sum = 0
         self.count = 0
-
     def update(self, val, n=1):
         self.val = val
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
 
-
-
 def save_checkpoint(state, filename='test.pth.tar'):
     torch.save(state, filename)
     return filename
-
-
-
 
 if __name__ == '__main__':
     main()
