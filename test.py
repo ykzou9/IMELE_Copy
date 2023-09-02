@@ -19,20 +19,19 @@ import csv
 import re
 
 def main():
-    # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
     parser = argparse.ArgumentParser()
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
-    # parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
-    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
+    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
-    md = glob.glob('/kaggle/input/block0-skip-model-110pthtar/Block0_skip_model_110.pth.tar')
+    md = glob.glob('/kaggle/working/IMELE_Copy/model_4.pth.tar')
     md.sort(key=natural_keys)  
 
     for x in md:
         x = str(x)
-        model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+        # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
         # model.load_state_dict(state_dict)
