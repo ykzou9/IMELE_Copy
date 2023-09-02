@@ -24,7 +24,7 @@ def main():
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
     # parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
-    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/model_4.pth.tar')
+    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
     md = glob.glob('/kaggle/input/block0-skip-model-110pthtar/Block0_skip_model_110.pth.tar')
