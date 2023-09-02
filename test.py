@@ -36,18 +36,17 @@ def main():
         state_dict = torch.load(x)['state_dict']
         # model.load_state_dict(state_dict)
         model.module.load_state_dict(state_dict)
+
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
 
-        #model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-        #model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        ## state_dict = torch.load(x)['state_dict']
-        #state_dict = torch.load(x, map_location=torch.device("cuda"))['state_dict']
-        #model.load_state_dict(state_dict, strict=False)
-        ## model.module.load_state_dict(state_dict)  
-        ## model.module.load_state_dict(torch.load(x)['state_dict'], strict=False)        
-        ## GitHub参考
-        ##model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
+        model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+        model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
+        state_dict = torch.load(x)['state_dict']
+        model.load_state_dict(state_dict, strict=True)
+        
+        # GitHub参考
+        #model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
