@@ -33,9 +33,15 @@ def main():
         x = str(x)
         # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        state_dict = torch.load(x)['state_dict']
+        #1 state_dict = torch.load(x)['state_dict']
         # model.load_state_dict(state_dict)
-        model.module.load_state_dict(state_dict)
+        #2 model.module.load_state_dict(state_dict)  
+        
+
+        model.module.load_state_dict(torch.load(x)['state_dict'], strict=False)        
+        # GitHub参考
+        model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
+
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
 
