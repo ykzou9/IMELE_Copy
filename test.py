@@ -42,8 +42,8 @@ def main():
 
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        state_dict = torch.load(x)['state_dict']
-        model.load_state_dict(state_dict, strict=True)
+        #state_dict = torch.load(x)['state_dict']
+        model.load_state_dict(torch.load(x)['state_dict'], strict=True)
         
         # GitHub参考
         #model.load_state_dict(torch.load(MODEL_PATH)['state_dict'], strict=False)
