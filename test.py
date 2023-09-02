@@ -25,21 +25,18 @@ def main():
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
     # parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/model_4.pth.tar')
-
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
-    md = glob.glob('/kaggle/working/IMELE_Copy/model_4.pth.tar')
+    md = glob.glob('/kaggle/working/IMELE_Copy/_model_30.pth.tar')
     md.sort(key=natural_keys)  
 
     for x in md:
         x = str(x)
-
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
         model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
         # model.load_state_dict(state_dict)
         model.module.load_state_dict(state_dict)
-
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
 
@@ -58,12 +55,9 @@ def test(test_loader, model, args):
         image = image.cuda()
         output = model(image)
         output = torch.nn.functional.interpolate(output,size=(440,440),mode='bilinear')
-
         batchSize = depth.size(0)
         testing_loss(depth,output,losses,batchSize)
-
         totalNumber = totalNumber + batchSize
-       
         errors = util.evaluateError(output, depth,i,batchSize)
         errorSum = util.addErrors(errorSum, errors, batchSize)
         averageError = util.averageErrors(errorSum, totalNumber)
@@ -139,7 +133,6 @@ def natural_keys(text):
     (See Toothy's implementation in the comments)
     '''
     return [ atoi(c) for c in re.split(r'(\d+)', text) ]  
-
 
 if __name__ == '__main__':
     main()
