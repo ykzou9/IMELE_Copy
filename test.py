@@ -23,7 +23,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
-    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
+    # parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
+    parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/model_4.pth.tar')
 
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
