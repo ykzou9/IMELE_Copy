@@ -26,7 +26,7 @@ def main():
     parser.add_argument('--model', default='/kaggle/working/IMELE_Copy')
     args = parser.parse_args()
     # md = glob.glob(args.model+'/*.tar')
-    md = glob.glob('/kaggle/working/IMELE_Copy/model_0.pth.tar')
+    md = glob.glob('/kaggle/working/IMELE_Copy/model_4.pth.tar')
     md.sort(key=natural_keys)  
 
     for x in md:
