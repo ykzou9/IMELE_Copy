@@ -171,7 +171,8 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 def save_checkpoint(state, filename='test.pth.tar'):
-    torch.save(state, filename)
+    #旧的 torch.save(state, filename)
+    torch.save(state, filename, _use_new_zipfile_serialization=True)
     return filename
 
 if __name__ == '__main__':
