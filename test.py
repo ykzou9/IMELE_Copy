@@ -19,7 +19,7 @@ import csv
 import re
 
 def main():
-    # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
     parser = argparse.ArgumentParser()
     parser.add_argument('--outfile', default='/kaggle/working/IMELE_Copy')
     parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/test.csv')
@@ -32,13 +32,9 @@ def main():
     for x in md:
         x = str(x)
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-        # model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
-        model = model.cuda()
+        model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
-        # model.load_state_dict(torch.load(x)['state_dict'], strict=True)
-        # model.load_state_dict(torch.load(x)['state_dict'])
-        new_state_dict = {key.replace('module.', ''): value for key, value in state_dict.items()}
-        model.load_state_dict(new_state_dict)
+        model.load_state_dict(state_dict)
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
