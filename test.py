@@ -32,10 +32,11 @@ def main():
     for x in md:
         x = str(x)
         model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
-        model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
+        model = model.cuda()  # model = torch.nn.DataParallel(model,device_ids=[0]).cuda()
         state_dict = torch.load(x)['state_dict']
-        print(state_dict.keys())
+        # print(state_dict.keys())
         model.load_state_dict(state_dict)
+        model = torch.nn.DataParallel(model, device_ids=[0])  # 重新包装模型在 DataParallel 中
 
         test_loader = loaddata.getTestingData(2,args.csv)
         test(test_loader, model, args)
