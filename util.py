@@ -64,7 +64,7 @@ def evaluateError(output, target, idx, batches):
         # ssim_loss = pytorch_ssim.SSIM(window_size = 15)
         # errors['SSIM'] = ssim_loss(_output,_target)
         errors['MSE'] = float(errors['MSE'].data.cpu().numpy())
-        errors['SSIM'] = float(errors['SSIM'].data.cpu().numpy())
+        # errors['SSIM'] = float(errors['SSIM'].data.cpu().numpy())
         errors['MAE'] = float(errors['MAE'].data.cpu().numpy())
         #errors['SSIM'] = float(errors['SSIM'])
     return errors
