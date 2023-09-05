@@ -72,7 +72,7 @@ def evaluateError(output, target, idx, batches):
 
 def addErrors(errorSum, errors, batchSize):
     errorSum['MSE']=errorSum['MSE'] + errors['MSE'] * batchSize
-    errorSum['SSIM']=errorSum['SSIM'] + errors['SSIM'] * batchSize
+    # errorSum['SSIM']=errorSum['SSIM'] + errors['SSIM'] * batchSize
     errorSum['MAE']=errorSum['MAE'] + errors['MAE'] * batchSize
     return errorSum
 
