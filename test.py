@@ -48,6 +48,11 @@ def test(test_loader, model, args):
     totalNumber = 0
     #2 errorSum = {'MSE': 0, 'RMSE': 0, 'MAE': 0,'SSIM':0}
     errorSum = {'MSE': 0, 'RMSE': 0, 'MAE': 0}
+
+    # 新增一个文件夹用于保存深度估计图像
+    if not os.path.exists('depth_estimates'):
+        os.makedirs('depth_estimates')
+
     for i, sample_batched in enumerate(test_loader):
         image, depth = sample_batched['image'], sample_batched['depth']
         # depth = depth.cuda(async=True)
@@ -63,6 +68,13 @@ def test(test_loader, model, args):
         errorSum = util.addErrors(errorSum, errors, batchSize)
         averageError = util.averageErrors(errorSum, totalNumber)
      
+        # 增加保存预测图片的代码
+        # 保存深度估计结果为图像文件
+        output_image = output.squeeze().cpu().detach().numpy()  # 假设output是单通道的深度图
+        output_image = (output_image * 255).astype(np.uint8)  # 转换为图像格式
+        output_image = Image.fromarray(output_image)
+        output_image.save(f'depth_estimates/output_{i}.png')  # 保存图像，可以根据需要修改文件名
+
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
     loss = float((losses.avg).data.cpu().numpy())
 
