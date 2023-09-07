@@ -66,9 +66,12 @@ def test(test_loader, model, args):
      
         # 增加保存预测图片的代码
         # 保存深度估计结果为图像文件
+        # 保存深度估计图像
         output_image = output.squeeze().cpu().detach().numpy()
         output_image = (output_image * 65535).astype(np.uint16)
-        output_image = Image.fromarray(output_image, mode='F')
+        if len(output_image.shape) == 2:
+            output_image = np.expand_dims(output_image, axis=2)  # 添加一个维度，使其变为3维灰度图像
+        output_image = Image.fromarray(output_image)
         output_image.save(f'depth_estimates/output_{i}.png')
 
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
