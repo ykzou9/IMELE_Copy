@@ -68,7 +68,7 @@ def test(test_loader, model, args):
         # 保存深度估计图像
         output_image = output.squeeze().cpu().detach().numpy()
         output_image = (output_image * 255).astype(np.uint8)  # 转换为8位无符号整数类型
-        output_image = Image.fromarray(output_image, mode='L')  # 使用'L'模式保存为灰度图像
+        output_image = Image.fromarray(output_image[0, 0])  # 取第一个通道的图像数据
         output_image.save(f'depth_estimates/output_{i}.png')
 
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
