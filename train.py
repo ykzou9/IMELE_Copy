@@ -27,7 +27,8 @@ parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
 parser.add_argument('--data', default='/kaggle/input/osidataset/osiDataset')
 parser.add_argument('--csv', default='/kaggle/working/IMELE_Copy/dataset/train.csv')
 parser.add_argument('--model', default='/kaggle/working/IMELE_Copy/pretrained_model/encoder/senet154-c7b49a05.pth')
-
+parser.add_argument('--save-interval', default=5, type=int,  # 每隔多少个Epoch保存一次Checkpoint
+                    help='interval for saving checkpoints')
 args = parser.parse_args()
 # save_model = args.data+'/'+'_model_'
 save_model = '/kaggle/working/IMELE_Copy'+'/'+'model_'
@@ -81,11 +82,19 @@ def main():
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
         train(train_loader, model, optimizer, epoch)
-        out_name = save_model+str(epoch)+'.pth.tar'
-        # if epoch > 30:
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!保留Checkpoint的设置
-        modelname = save_checkpoint({'state_dict': model.state_dict()},out_name)
-        print(modelname)
+        #新的
+        if (epoch + 1) % args.save_interval == 4 or epoch == args.epochs - 1:
+            # 保存Checkpoint，每隔一定数量的Epoch保存一次，并且最后一个Epoch一定要保存
+            out_name = save_model + f'epoch_{epoch}.pth.tar'
+            modelname = save_checkpoint({'state_dict': model.state_dict()}, out_name)
+            print(f"Saved checkpoint at epoch {epoch}: {modelname}")
+
+        #旧的
+        #out_name = save_model+str(epoch)+'.pth.tar'
+        ## if epoch > 30:
+        ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!保留Checkpoint的设置
+        #modelname = save_checkpoint({'state_dict': model.state_dict()},out_name)
+        #print(modelname)
 
 def train(train_loader, model, optimizer, epoch):
     criterion = nn.L1Loss()
