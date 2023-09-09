@@ -63,18 +63,14 @@ def test(test_loader, model, args):
         errors = util.evaluateError(output, depth,i,batchSize)
         errorSum = util.addErrors(errorSum, errors, batchSize)
         averageError = util.averageErrors(errorSum, totalNumber)
-     
-        # 增加保存预测图片的代码
-        # 获取原测试图片的文件名（假设文件名存储在sample_batched中）
-        image_filename = sample_batched['filename']  # 根据您的数据结构获取文件名
-        image_filename = os.path.basename(image_filename)  # 提取文件名部分
-        # 构建保存路径和文件名
-        output_filename = f'depth_estimates/{os.path.splitext(image_filename)[0]}_output.png'   
+
+        # ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
         # 保存深度估计图像
         output_image = output.squeeze().cpu().detach().numpy()
         output_image = (output_image * 65535).astype(np.uint16)  # 转换为16位无符号整数类型
         output_image = Image.fromarray(output_image[0], mode='I;16')  # 使用'I;16'模式保存为16位灰度图像
-        output_image.save(output_filename)
+        output_image.save(f'depth_estimates/output_{i}.png')
+        # ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 
     averageError['RMSE'] = np.sqrt(averageError['MSE'])
     loss = float((losses.avg).data.cpu().numpy())
