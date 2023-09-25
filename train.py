@@ -119,7 +119,7 @@ def train(train_loader, model, optimizer, epoch):
         optimizer.zero_grad()
         output = model(image)
         # 尝试保存训练过程中的图片，修改了保存位置
-        save_path = '/your/new/save/path/'
+        save_path = '/kaggle/working/'
         if i%200 == 0:
             x = output[0]
             x = x.view([220,220])
