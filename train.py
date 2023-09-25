@@ -118,6 +118,8 @@ def train(train_loader, model, optimizer, epoch):
         ones = torch.autograd.Variable(ones)
         optimizer.zero_grad()
         output = model(image)
+        # 尝试保存训练过程中的图片，修改了保存位置
+        save_path = '/your/new/save/path/'
         if i%200 == 0:
             x = output[0]
             x = x.view([220,220])
@@ -130,9 +132,12 @@ def train(train_loader, model, optimizer, epoch):
             x2 = x2  *100000
             print(x2)
             x = x.astype('uint16')
-            cv2.imwrite(args.data+str(i)+'_out.png',x)
+            cv2.imwrite(save_path + str(i) + '_out.png', x)
             x2 = x2.astype('uint16')
-            cv2.imwrite(args.data+str(i)+'_out2.png',x2)
+            cv2.imwrite(save_path + str(i) + '_out2.png', x2)
+            # cv2.imwrite(args.data+str(i)+'_out.png',x)
+            # x2 = x2.astype('uint16')
+            # cv2.imwrite(args.data+str(i)+'_out2.png',x2)
         
         depth_grad = get_gradient(depth)
         output_grad = get_gradient(output)
